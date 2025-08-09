@@ -1,6 +1,9 @@
 package com.example.anomalydetection.controllers;
 
 import com.example.anomalydetection.dtos.AnomalyAlertDto;
+import com.example.anomalydetection.models.AnomalyAlert;
+import com.example.anomalydetection.services.AnomalyAlertService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +17,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/alerts")
 public class AnomalyAlertController {
+    AnomalyAlertService anomalyAlertService;
+
+    public AnomalyAlertController(AnomalyAlertService anomalyAlertService) {
+        this.anomalyAlertService = anomalyAlertService;
+    }
 
     @GetMapping
     public ResponseEntity<List<AnomalyAlertDto>> getAllAlerts() {
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK); //implement service
+        List<AnomalyAlertDto> anomalyAlertList = anomalyAlertService.getAllAlerts();
+        return new ResponseEntity<>(anomalyAlertList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

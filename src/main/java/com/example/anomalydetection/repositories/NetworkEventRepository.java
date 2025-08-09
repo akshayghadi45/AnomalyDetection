@@ -15,5 +15,5 @@ public interface NetworkEventRepository extends JpaRepository<NetworkEvent, Long
     @Override
     public List<NetworkEvent> findAll();
 
-    List<NetworkEvent> findTop50ByOrderByTimestampDesc();
+    public List<NetworkEvent> findTop50ByOrderByTimestampDesc();
 }

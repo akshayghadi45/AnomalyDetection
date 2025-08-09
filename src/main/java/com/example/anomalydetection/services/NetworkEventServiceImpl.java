@@ -18,9 +18,12 @@ public class NetworkEventServiceImpl implements NetworkEventService {
     AnomalyAlertRepository anomalyAlertRepository;
     AnomalyDetectionService anomalyDetectionService;
 
-    NetworkEventServiceImpl(NetworkEventRepository networkEventRepository,  AnomalyAlertRepository anomalyAlertRepository) {
+    NetworkEventServiceImpl(NetworkEventRepository networkEventRepository,
+                            AnomalyAlertRepository anomalyAlertRepository,
+                            AnomalyDetectionService anomalyDetectionService) {
         this.networkEventRepository = networkEventRepository;
         this.anomalyAlertRepository = anomalyAlertRepository;
+        this.anomalyDetectionService = anomalyDetectionService;
     }
 
     @Override
@@ -29,10 +32,12 @@ public class NetworkEventServiceImpl implements NetworkEventService {
         NetworkEvent event = new NetworkEvent();
         event.setSource_ip(networkEventDto.getSource_ip());
         event.setDestination_ip(networkEventDto.getDestination_ip());
-        event.setTimestamp(networkEventDto.getTimestamp());
+        //event.setTimestamp(networkEventDto.getTimestamp());
         event.setPacket_size(networkEventDto.getPacketSize());
         event.setProtocol(networkEventDto.getProtocol());
-        event.setTimestamp(networkEventDto.getTimestamp()!=null?networkEventDto.getTimestamp(): Instant.now());
+        //event.setTimestamp(networkEventDto.getTimestamp()!=null?networkEventDto.getTimestamp(): Instant.now());
+        event.setTimestamp(Instant.now());
+        event.setDestination_port(networkEventDto.getDestinationPort());
 
         //persist event
         NetworkEvent savedNetworkEvent =networkEventRepository.save(event);
@@ -47,7 +52,13 @@ public class NetworkEventServiceImpl implements NetworkEventService {
             anomalyAlert.setDetectedAt(Instant.now());
             anomalyAlertRepository.save(anomalyAlert);
         }
-        return networkEventDto;
+        return new NetworkEventDto(savedNetworkEvent.getSource_ip(),
+                savedNetworkEvent.getDestination_ip(),
+                savedNetworkEvent.getPacket_size(),
+                savedNetworkEvent.getProtocol(),
+                savedNetworkEvent.getTimestamp(),
+                savedNetworkEvent.getDestination_port()
+        );
     }
 
     @Override
@@ -59,7 +70,8 @@ public class NetworkEventServiceImpl implements NetworkEventService {
                         networkEvent.getDestination_ip(),
                         networkEvent.getPacket_size(),
                         networkEvent.getProtocol(),
-                        networkEvent.getTimestamp()
+                        networkEvent.getTimestamp(),
+                        networkEvent.getDestination_port()
 
                 ))
                 .collect(Collectors.toList());

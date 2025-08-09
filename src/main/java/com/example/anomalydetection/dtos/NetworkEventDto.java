@@ -12,16 +12,19 @@ public class NetworkEventDto {
     private String destination_ip;
     private int packetSize;
     private String protocol;
-    private Instant timestamp;
+    //private Instant timestamp;
+    private String destinationPort;
+    //private int sourcePort;
 
     //constructors
     public NetworkEventDto(){}
 
-    public NetworkEventDto(String source_ip, String destination_ip, int packetSize, String protocol, Instant timestamp) {
+    public NetworkEventDto(String source_ip, String destination_ip, int packetSize, String protocol, Instant timestamp, String destinationPort) {
     this.source_ip = source_ip;
     this.destination_ip = destination_ip;
     this.packetSize = packetSize;
     this.protocol = protocol;
-    this.timestamp = timestamp;
+    this.destinationPort=destinationPort;
+    //this.timestamp = timestamp;
     }
 }
