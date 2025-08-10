@@ -5,6 +5,8 @@ import com.example.anomalydetection.models.AnomalyAlert;
 import com.example.anomalydetection.models.NetworkEvent;
 import com.example.anomalydetection.repositories.AnomalyAlertRepository;
 import com.example.anomalydetection.repositories.NetworkEventRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -75,5 +77,18 @@ public class NetworkEventServiceImpl implements NetworkEventService {
 
                 ))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<NetworkEventDto> getPagedEvents(int page, int size) {
+        Page<NetworkEvent> entities = networkEventRepository.findAll(PageRequest.of(page, size));
+        return entities.map(networkEvent -> new NetworkEventDto(
+                networkEvent.getSource_ip(),
+                networkEvent.getDestination_ip(),
+                networkEvent.getPacket_size(),
+                networkEvent.getProtocol(),
+                networkEvent.getTimestamp(),
+                networkEvent.getDestination_port()
+        ));
     }
 }
