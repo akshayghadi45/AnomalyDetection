@@ -31,7 +31,7 @@ public class AnomalyAlertController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AnomalyAlertDto> getAlertById(@PathVariable Long id) {
-        //service call
-        return new ResponseEntity<>(new AnomalyAlertDto(), HttpStatus.OK);
+        AnomalyAlertDto alertById = anomalyAlertService.getAlertById(id);
+        return new ResponseEntity<>(alertById, HttpStatus.OK);
     }
 }
